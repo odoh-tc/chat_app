@@ -34,6 +34,8 @@ git clone https://github.com/your_username/chat_app.git
 2. Create a virtual environment and activate it:
 
 ```python
+cd chat_app
+
 python -m venv venv && source venv/bin/activate
 
 ```
@@ -42,7 +44,7 @@ python -m venv venv && source venv/bin/activate
 3. Install Dependencies:
 
 ```python
-cd chat_app
+
 pip install -r requirements.txt
 
 ```
