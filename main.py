@@ -12,6 +12,21 @@ templates = Jinja2Templates(directory="templates")
 
 @dataclass
 class ConnectionManager:
+
+  """
+    A class to manage WebSocket connections.
+
+    Attributes:
+        active_connections (dict): A dictionary to store the active WebSocket connections.
+
+    Methods:
+        __init__(self) -> None: Initializes the ConnectionManager object.
+        connect(self, websocket: WebSocket) -> None: Accepts the connection from the client and assigns a unique ID.
+        send_message(self, ws: WebSocket, message: str) -> None: Sends a message to the client.
+        find_connection_id(self, websocket: WebSocket) -> str: Finds the unique ID associated with the given WebSocket connection.
+        broadcast(self, webSocket: WebSocket, data: str) -> None: Broadcasts a message to all active connections.
+        disconnect(self, websocket: WebSocket) -> str: Disconnects the given WebSocket connection and returns its unique ID.
+    """
   def __init__(self) -> None:
     self.active_connections: dict = {}
 
@@ -48,13 +63,17 @@ class ConnectionManager:
 
     return id
 
-app = FastAPI()
+app = FastAPI(
+    title="FastAPI WebSocket Chat Application",
+    description="The FastAPI WebSocket Chat Application is a real-time chat system built using FastAPI framework. "
+    "It allows users to connect to a chat room via WebSocket, send messages, and receive messages instantly. The application provides a seamless user experience with features like WebSocket connection management, message broadcasting, and graceful disconnection handling. Users can join the chat room by accessing the provided endpoint and interact with other participants in real-time. Additionally, the application serves HTML templates for both joining the chat room and the chat interface, enhancing the user interface experience."
+)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 connection_manager = ConnectionManager()
 
 @app.get("/", response_class=HTMLResponse)
 def get_room(request: Request):
-  return templates.TemplateResponse("index.html", {"request": request});
+  return templates.TemplateResponse("index.html", {"request": request})
 
 @app.websocket("/message")
 async def websocket_endpoint(websocket: WebSocket):
